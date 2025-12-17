@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 
 import CardWrapper from "./card-wrapper";
-import { LoginSchema, RegisterSchema } from "@/schemas/index"
+import { RegisterSchema } from "@/schemas/index"
 import { useState, useTransition } from "react";
 
 import FormSuccess from "../form-success";
@@ -25,7 +25,7 @@ const RegisterForm = () => {
 	const [error, setError] = useState<string | undefined>("")
 	const [success, setSuccess] = useState<string | undefined>("")
 
-	const handleFormSubmit = (values: z.infer<typeof LoginSchema>) => {
+	const handleFormSubmit = (values: z.infer<typeof RegisterSchema>) => {
 		startTransition(() => {
 			register(values).then((data) => {
 				if (data?.error) {
@@ -48,7 +48,7 @@ const RegisterForm = () => {
 		}
 	})
 	return (
-		<CardWrapper backButtonLabel="Don't have an account?" headerLabel="Welcome Back" backButtonHref="/auth/register" socials>
+		<CardWrapper backButtonLabel="Already have an account?" headerLabel="Create an account" backButtonHref="/auth/login" socials>
 			<Form {...form}>
 				<form className="space-y-5" onSubmit={form.handleSubmit(handleFormSubmit)}>
 
@@ -93,11 +93,12 @@ const RegisterForm = () => {
 										<Input placeholder="********"  {...field} />
 									</FormControl>
 									<FormMessage />
-									<FormSuccess message={success} />
-									<FormError message={error} />
+
 								</FormItem>
 							)}
 						/>
+								<FormSuccess message={success} />
+									<FormError message={error} />
 					</div>
 					<Loader isPending={isPending} text="Create an account" />
 				</form>

@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import CardWrapper from "./card-wrapper";
 import { LoginSchema } from "@/schemas/index"
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { login } from "@/actions/login";
 import FormSuccess from "../form-success";
 import FormError from "../form-error";
@@ -19,6 +19,12 @@ import Loader from "../loader";
 
 
 const LoginForm = () => {
+	const [mounted, setMounted] = useState<boolean>(false);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
 	const [isPending, startTransition] = useTransition();
 	const [error, setError] = useState<string | undefined>("")
 	const [success, setSuccess] = useState<string | undefined>("")
@@ -43,6 +49,7 @@ const LoginForm = () => {
 			password: ""
 		}
 	})
+	if (!mounted) return null; // ✅ prevents hydration mismatch
 	return (
 		<CardWrapper backButtonLabel="Don't have an account?" headerLabel="Welcome Back" backButtonHref="/auth/register" socials>
 			<Form {...form}>
@@ -71,16 +78,16 @@ const LoginForm = () => {
 								<FormItem>
 									<FormLabel>Password</FormLabel>
 									<FormControl>
-										<Input placeholder="********"  {...field} />
+										<Input placeholder="********" type="password"  {...field} />
 									</FormControl>
 									<FormMessage />
-									<FormSuccess message={success} />
-									<FormError message={error} />
 								</FormItem>
 							)}
 						/>
+						<FormSuccess message={success} />
+						<FormError message={error} />
 					</div>
-					<Loader isPending={isPending} text="Create an account" />
+					<Loader isPending={isPending} text="Log In" />
 				</form>
 			</Form>
 		</CardWrapper>
