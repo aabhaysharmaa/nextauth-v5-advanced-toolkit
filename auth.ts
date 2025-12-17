@@ -14,7 +14,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Credentials({
       name : "credentials",
       async authorize(credentials) {
-        const validateFields = LoginSchema.safeParse(credentials);
+        const validateFields = LoginSchema.safeParse(credentials); 
         if (validateFields.success) {
           const { email, password } = validateFields.data
           const hashedPassword = await bcrypt.hash(password, 10);

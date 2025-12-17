@@ -1,6 +1,7 @@
 "use server";
 
 import { signIn } from "@/auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/route";
 
 
 import { LoginSchema } from "@/schemas";
@@ -17,7 +18,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
 		const { email, password } = validateFields.data
 
-		await signIn("credentials", { email , password , redirect : false })
+		await signIn("credentials", { email, password, redirectTo : DEFAULT_LOGIN_REDIRECT })
 		// TODO : send a verification email
 
 		return { success: "Email Sent!" }
@@ -27,6 +28,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 			switch (error.type) {
 				case "CredentialsSignin":
 					return { error: "Invalid Credentials" }
+
 				default: return { error: "Something went Wrong!" }
 			}
 		}

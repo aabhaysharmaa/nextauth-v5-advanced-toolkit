@@ -1,9 +1,31 @@
 
 import { auth as proxy } from "@/auth";
+import { apiAuthPrefix, authRoutes, DEFAULT_LOGIN_REDIRECT, publicRoutes } from "./route";
+
 
 export default proxy((req) => {
-  console.log("IS LOGGED IN ", !!req.auth);
-  console.log("PATH : ", req.nextUrl.pathname)
+  const isLoggedIn = !!req.auth;
+  const { nextUrl } = req;
+
+  const isAuthPrefix = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isPublicRoutes = publicRoutes.includes(nextUrl.pathname);
+  const isAuthRoutes = authRoutes.includes(nextUrl.pathname);
+
+  if (isAuthPrefix) {
+    return null
+  }
+
+  if (isAuthRoutes) {
+    if (isLoggedIn) {
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
+    }
+    return null
+  }
+
+  if (!isLoggedIn && !isPublicRoutes) {
+    return Response.redirect(new URL("/auth/login",nextUrl))
+  }
+
 })
 
 export const config = {

@@ -1,12 +1,14 @@
 "use client";
+import { signIn } from "next-auth/react"
 
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "../ui/button";
 import { FaGithub } from "react-icons/fa";
 
+
 const Socials = () => {
-	const handleClick = (provider: string) => {
-		console.log(provider);
+	const handleClick = (provider: "google" | "github") => {
+		signIn(provider)
 	}
 
 
