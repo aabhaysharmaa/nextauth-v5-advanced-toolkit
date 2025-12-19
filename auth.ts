@@ -7,7 +7,9 @@ import { LoginSchema } from "./schemas"
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./lib/prismaDb";
 import { getUserByEmail, getUserById } from "./data";
-
+import { getTwoFactorConformationById } from "./data/twoFactorConformation";
+import { UserRole } from "./lib/generated/prisma/enums";
+import { getAccountByUserId } from "@/data/account";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   // events Object help us to do Audit logs and handling other tasks with sending any response
   events: {
@@ -31,16 +33,45 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const existingUser = await getUserById(user?.id as string);
       if (!existingUser?.emailVerified) return false;
 
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConformationById(existingUser.id);
+        if (!twoFactorConfirmation) return false;
+        await prisma.twoFactorConfirmation.delete({ where: { id: twoFactorConfirmation?.id } })
+      }
       return true;
     },
     async session({ token, session }) {
-      console.log("session Token ", token)
-      // console.log({ session })
+      if (!session.user) return session
+      if (session.user) {
+        session.user.name = token.name
+        session.user.email = token.email as string
+        session.user.isOAuth = token.isOAuth as boolean
+      }
+      if (token.sub && session.user) {
+        session.user.id = token.sub
+      }
+      if (token.role && session.user) {
+        session.user.role = token.role as UserRole
+      }
+
+      session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+
+
+
       return session
     },
-    async jwt({ token, user }) {
-      console.log({ token })
-      console.log({ user })
+    async jwt({ token }) {
+      console.log("Token : ", token)
+      if (!token.sub) return token
+      const existingUser = await getUserById(token?.sub as string);
+      if (!existingUser) return token;
+      const existingAccount = await getAccountByUserId(token.sub as string);
+
+      token.role = existingUser.role
+      token.email = existingUser.email
+      token.name = existingUser.name
+      token.isOAuth = !!existingAccount
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled
       return token
     },
   },

@@ -64,8 +64,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 				)
 			}
 		}
-		await signIn("credentials", { email, password, redirect : false ,  })
-		return { success: "success" }
+		await signIn("credentials", { email, password, redirect: false, })
+		return { success: "Logged In" }
 	} catch (error) {
 		console.log("Error in login Action : ", error);
 		if (error instanceof AuthError) {
@@ -78,4 +78,3 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 		}
 	}
 }
-

@@ -22,7 +22,7 @@ export const newVerification = async (token: string) => {
 		if (!existingUser || !existingUser?.id) {
 			return { error: "User does not exist" }
 		}
-		
+
 		if (existingUser.emailVerified) {
 			return { success: "Email already verified!" };
 		}

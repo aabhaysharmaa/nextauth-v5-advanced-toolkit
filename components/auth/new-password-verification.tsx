@@ -34,6 +34,8 @@ const NewPasswordVerification = () => {
 	})
 
 	const onSubmit = (values: z.infer<typeof NewPasswordSchema>) => {
+		setError("")
+		setSuccess("")
 		startTransition(() => {
 			newPassword(values, token as string).then((data) => {
 				if (data?.error) {
