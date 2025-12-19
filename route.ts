@@ -7,7 +7,10 @@
  */
 
 export const publicRoutes = [
-	"/"
+	"/",
+	"/auth/newVerification",
+
+
 ]
 
 
@@ -17,7 +20,7 @@ export const publicRoutes = [
  @type {string[]}
  */
 
-export const authRoutes = ["/auth/login", "/auth/register"]
+export const authRoutes = ["/auth/login", "/auth/register", "/auth/error", "/auth/newPassword", "/auth/reset",]
 
 
 /**

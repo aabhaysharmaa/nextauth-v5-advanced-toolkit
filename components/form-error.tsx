@@ -10,7 +10,7 @@ interface FormErrorProps {
 const FormError = ({ message }: FormErrorProps) => {
 	if (!message) return null;
 	return (
-		<div className="flex items-center justify-start p-3 bg-destructive/20 text-destructive space-x-2 rounded-md">
+		<div className="flex items-center justify-start p-3 bg-destructive/15 text-destructive/70 space-x-2 rounded-md">
 			<FaExclamationTriangle className="size-5" />
 			<p>{message}</p>
 		</div>

@@ -6,24 +6,57 @@ import Credentials from "next-auth/providers/credentials"
 import { LoginSchema } from "./schemas"
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./lib/prismaDb";
-import { getUserByEmail } from "./data";
+import { getUserByEmail, getUserById } from "./data";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  // events Object help us to do Audit logs and handling other tasks with sending any response
+  events: {
+    async linkAccount({ user }) {
+      await prisma?.user?.update({
+        where: { id: user.id },
+        data: {
+          emailVerified: new Date()
+        }
+      })
+    }
+  },
+  // callbacks are asynchronous function that helps us to do work when a certain action is performed
+  callbacks: {
+
+    async signIn({ user, account }) {
+      console.log("SignIn User :", user)
+      if (account?.type !== "credentials") {
+        return true;
+      }
+      const existingUser = await getUserById(user?.id as string);
+      if (!existingUser?.emailVerified) return false;
+
+      return true;
+    },
+    async session({ token, session }) {
+      console.log("session Token ", token)
+      // console.log({ session })
+      return session
+    },
+    async jwt({ token, user }) {
+      console.log({ token })
+      console.log({ user })
+      return token
+    },
+  },
   adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({
-      name : "credentials",
       async authorize(credentials) {
-        const validateFields = LoginSchema.safeParse(credentials); 
+        const validateFields = LoginSchema.safeParse(credentials);
         if (validateFields.success) {
           const { email, password } = validateFields.data
-          const hashedPassword = await bcrypt.hash(password, 10);
 
           const user = await getUserByEmail(email);
-          if (!user) {
+          if (!user || !user.password) {
             return null
           }
-          const comparePassword = await bcrypt.compare(password, hashedPassword);
+          const comparePassword = await bcrypt.compare(password, user?.password);
           if (comparePassword) return user;
 
         }

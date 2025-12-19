@@ -26,6 +26,8 @@ const RegisterForm = () => {
 	const [success, setSuccess] = useState<string | undefined>("")
 
 	const handleFormSubmit = (values: z.infer<typeof RegisterSchema>) => {
+		setError("")
+		setSuccess("")
 		startTransition(() => {
 			register(values).then((data) => {
 				if (data?.error) {
@@ -60,7 +62,7 @@ const RegisterForm = () => {
 								<FormItem>
 									<FormLabel>Name</FormLabel>
 									<FormControl>
-										<Input placeholder="Abhay Sharma"  {...field} />
+										<Input placeholder="JohnDoe"  {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -75,7 +77,7 @@ const RegisterForm = () => {
 								<FormItem>
 									<FormLabel>Email</FormLabel>
 									<FormControl>
-										<Input placeholder="johndoe@gmail.com"  {...field} />
+										<Input placeholder="johndoe@gmail.com" type="email"  {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -90,15 +92,15 @@ const RegisterForm = () => {
 								<FormItem>
 									<FormLabel>Password</FormLabel>
 									<FormControl>
-										<Input placeholder="********"  {...field} />
+										<Input placeholder="********" type="password"  {...field} />
 									</FormControl>
 									<FormMessage />
 
 								</FormItem>
 							)}
 						/>
-								<FormSuccess message={success} />
-									<FormError message={error} />
+						<FormSuccess message={success} />
+						<FormError message={error} />
 					</div>
 					<Loader isPending={isPending} text="Create an account" />
 				</form>

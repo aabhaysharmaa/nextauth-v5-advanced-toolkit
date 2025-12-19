@@ -7,14 +7,14 @@ interface LoaderProps {
 	isPending: boolean
 }
 
-const Loader = ({ text, isPending }: LoaderProps) => {
+const SubmitButton = ({ text, isPending }: LoaderProps) => {
 	return (
-		<div className="flex">
-			<Button className="w-full">
+		<div className="flex" >
+			<Button  className="w-full cursor-pointer" type="submit">
 				{isPending ? <Loader2 className="size-5 animate-spin animation" /> : text}
 			</Button>
 		</div>
 	)
 }
 
-export default Loader
+export default SubmitButton
