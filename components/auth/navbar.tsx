@@ -24,7 +24,10 @@ const NavBar = () => {
 					<Link href="/settings">Settings</Link>
 				</Button>
 			</div>
-			<UserButton />
+			<div className="cursor-pointer">
+				<UserButton />
+			</div>
+
 		</nav>
 	)
 }

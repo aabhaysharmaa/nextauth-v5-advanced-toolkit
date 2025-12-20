@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useEffect, useState, useTransition } from "react";
+import {  useState, useTransition } from "react";
 import FormError from "../form-error";
 import FormSuccess from "../form-success";
 import { Loader2 } from "lucide-react";
@@ -21,11 +21,11 @@ const NewPasswordVerification = () => {
 	const [error, setError] = useState<string | undefined>("")
 	const [success, setSuccess] = useState<string | undefined>("")
 	const [isPending, startTransition] = useTransition();
-	const [mounted, setMounted] = useState<boolean>(false);
+	// const [mounted, setMounted] = useState<boolean>(false);
 
-	useEffect(() => {
-		setMounted(true);
-	}, []);
+	// useEffect(() => {
+	// 	setMounted(true);
+	// }, []);
 	const form = useForm<z.infer<typeof NewPasswordSchema>>({
 		resolver: zodResolver(NewPasswordSchema),
 		defaultValues: {
@@ -47,7 +47,7 @@ const NewPasswordVerification = () => {
 			})
 		})
 	}
-	if (!mounted) return null; // ✅ prevents hydration mismatch
+	// if (!mounted) return null; // ✅ prevents hydration mismatch
 	return (
 		<CardWrapper headerLabel="Reset Password" backButtonHref="/auth/login" backButtonLabel="Back to login">
 			<Form {...form}>

@@ -1,8 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from '../ui/card'
-
-
+import { Card, CardContent, CardHeader } from '../ui/card';
 
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
@@ -20,7 +18,7 @@ interface AdminCardProps {
 const AdminCard = ({ label }: AdminCardProps) => {
 
 	const onClickAdminApiRoute = () => {
-		fetch("/auth/api/admin").then((data) => {
+		fetch("/api/admin").then((data) => {
 			if (data.ok) {
 				toast.success("Allowed API Route!")
 			} else {

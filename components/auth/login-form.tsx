@@ -7,7 +7,6 @@ import { Input } from "../ui/input";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-
 import CardWrapper from "./card-wrapper";
 import { LoginSchema } from "@/schemas/index"
 import { useEffect, useState, useTransition } from "react";
@@ -35,7 +34,6 @@ const LoginForm = () => {
 	const [success, setSuccess] = useState<string | undefined>("")
 
 	const handleFormSubmit = (values: z.infer<typeof LoginSchema>) => {
-		console.log("Submitting...")
 		setError("")
 		setSuccess("")
 		startTransition(() => {

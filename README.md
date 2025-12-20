@@ -2,12 +2,8 @@
 
 ## 🚀 Key Features
 
-## 🎬 Demo
+##  [ 👉 Live Site](/video.gif)
 
-![Watch the demo](/video.gif)
-## [ 👉 Live Site](/video.gif)
-
-![Demo](video)
 
 
 ### Authentication
@@ -66,7 +62,7 @@
 * **Framework:** Next.js 16 (App Router & Server Actions)
 * **Authentication:** Next-Auth v5 (Auth.js)
 * **Database:** Any (Prisma, PostgreSQL, MongoDB supported)
-* **Email:** SMTP / Third-party providers
+* **Email:**  Third-party providers (RESEND)
 * **Frontend:** React 18 (Server & Client Components)
 * **Security:** Role-based access, 2FA, password/email verification
 
@@ -124,11 +120,7 @@ GITHUB_SECRET=your_github_secret
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-# Email (SMTP)
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=your_email@example.com
-SMTP_PASSWORD=your_password
+
 ```
 
 ### 4. Run Prisma Setup (if using Prisma)

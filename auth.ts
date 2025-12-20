@@ -11,9 +11,12 @@ import { getTwoFactorConformationById } from "./data/twoFactorConformation";
 import { UserRole } from "./lib/generated/prisma/enums";
 import { getAccountByUserId } from "@/data/account";
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  pages: { error: "/auth/error", signIn: "/auth/login" },
+
   // events Object help us to do Audit logs and handling other tasks with sending any response
   events: {
     async linkAccount({ user }) {
+
       await prisma?.user?.update({
         where: { id: user.id },
         data: {
@@ -26,7 +29,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
 
     async signIn({ user, account }) {
-      console.log("SignIn User :", user)
       if (account?.type !== "credentials") {
         return true;
       }
@@ -41,32 +43,33 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
     async session({ token, session }) {
+      console.log({ token })
       if (!session.user) return session
-      if (session.user) {
-        session.user.name = token.name
-        session.user.email = token.email as string
-        session.user.isOAuth = token.isOAuth as boolean
-      }
+
+
       if (token.sub && session.user) {
         session.user.id = token.sub
       }
       if (token.role && session.user) {
         session.user.role = token.role as UserRole
       }
+      if (token.isTwoFactorEnabled && session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
 
-      session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
-
-
-
+      }
+      if (session.user) {
+        session.user.name = token.name
+        session.user.email = token.email as string
+        session.user.isOAuth = token.isOAuth as boolean
+      }
       return session
     },
     async jwt({ token }) {
-      console.log("Token : ", token)
       if (!token.sub) return token
       const existingUser = await getUserById(token?.sub as string);
       if (!existingUser) return token;
       const existingAccount = await getAccountByUserId(token.sub as string);
-
+      console.log({ existingAccount })
       token.role = existingUser.role
       token.email = existingUser.email
       token.name = existingUser.name
@@ -84,14 +87,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const { email, password } = validateFields.data
 
           const user = await getUserByEmail(email);
-          if (!user || !user.password) {
+          if (!user) {
             return null
           }
-          const comparePassword = await bcrypt.compare(password, user?.password);
-          if (comparePassword) return user;
-
+          const comparePassword = await bcrypt.compare(password, user?.password as string);
+          if (comparePassword){
+            return user
+          }
         }
-        return null;
+          return null;
+
       },
 
     }),

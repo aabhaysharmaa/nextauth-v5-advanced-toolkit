@@ -7,11 +7,9 @@ import { getTwoFactorTokenByEmail } from "@/data/twoFactorVerification";
 import { sendTwoFactorEmail, sendVerificationEmail } from "@/lib/mail";
 import prisma from "@/lib/prismaDb";
 import { generateTwoFactorConformationByEmail, generateVerificationTokenByEmail } from "@/lib/token";
-import { DEFAULT_LOGIN_REDIRECT } from "@/route";
 import { LoginSchema } from "@/schemas";
 import { AuthError } from "next-auth";
 import * as z from 'zod';
-
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
 	try {
@@ -27,18 +25,18 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 		}
 
 		if (!user.emailVerified) {
-			// const verificationToken = await generateVerificationTokenByEmail(user.email);
-			// sendVerificationEmail(verificationToken?.email as string, verificationToken?.token as string)
+			const verificationToken = await generateVerificationTokenByEmail(user.email);
+			sendVerificationEmail(verificationToken?.email as string, verificationToken?.token as string)
 			return { success: "Conformation email Sent!" }
 		}
 		if (user.isTwoFactorEnabled && user.email) {
 			if (code) {
 				const twoFactorToken = await getTwoFactorTokenByEmail(user.email);
+				console.log({twoFactorToken})
 				if (!twoFactorToken) return { error: "Invalid Code" }
 
 				if (code !== twoFactorToken.token) return { error: "Invalid Code" }
 				const hasExpired = new Date(twoFactorToken.expires) < new Date();
-
 				if (hasExpired) return { error: "Token Expired" }
 				await prisma.twoFactorToken.delete({ where: { id: twoFactorToken.id } })
 				const existingConfirmation = await getTwoFactorConformationById(user.id);
@@ -60,7 +58,6 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 				sendTwoFactorEmail(user.email, twoFactorToken?.token as string)
 				return (
 					{ twoFactor: true }
-
 				)
 			}
 		}

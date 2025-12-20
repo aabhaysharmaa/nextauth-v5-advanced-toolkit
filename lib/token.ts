@@ -80,3 +80,51 @@ export const generateResetPasswordTokenByEmail = async (email: string) => {
 	}
 }
 
+/**
+ *
+ * 	const user = await currentUser();
+		if (!user) {
+			return { error: "Unauthorized" }
+		}
+
+		const dbUser = await getUserById(user.id as string);
+		if (!dbUser) {
+			return { error: "Unauthorized Error" }
+		}
+
+		if (user.isOAuth) {
+			values.email = undefined;
+			values.password = undefined;
+			values.newPassword = undefined;
+			values.isTwoFactorEnabled = undefined
+		}
+
+		if (values.email && values.email !== user.email) {
+			const existingUser = await getUserByEmail(values.email);
+			if (existingUser) {
+				return { error: "Email Already exists" }
+			}
+
+			const verificationToken = await generateVerificationTokenByEmail(values.email);
+			await sendVerificationEmail(verificationToken?.email as string, verificationToken?.token as string)
+		}
+
+		if (values.password && values.newPassword && dbUser.password) {
+			const passwordMatch = await bcrypt.compare(values.password, dbUser.password);
+			if (!passwordMatch) {
+				return { error: "Incorrect password" }
+			}
+			const hashedPassword = await bcrypt.hash(values.newPassword, 10)
+			values.password = hashedPassword;
+			values.newPassword = undefined
+		}
+
+		await prisma.user.update({
+			where: { id: dbUser.id },
+			data: {
+				...values
+			}
+		})
+
+		return { success: "Settings Updated!" }
+ */

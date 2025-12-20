@@ -10,7 +10,7 @@ interface LoaderProps {
 const SubmitButton = ({ text, isPending }: LoaderProps) => {
 	return (
 		<div className="flex" >
-			<Button  className="w-full cursor-pointer" type="submit">
+			<Button  className="w-full cursor-pointer" type="submit" disabled={isPending}>
 				{isPending ? <Loader2 className="size-5 animate-spin animation" /> : text}
 			</Button>
 		</div>
