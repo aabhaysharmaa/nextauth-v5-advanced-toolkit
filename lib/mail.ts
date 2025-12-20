@@ -3,11 +3,11 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_SECRET_KEY)
 
+const url = "https://nextauth-v5-advanced-toolkit.vercel.app"
 
-
-export const sendTwoFactorEmail = (email: string, code: string) => {
+export const sendTwoFactorEmail = async (email: string, code: string) => {
 	try {
-		resend.emails.send({
+		await resend.emails.send({
 			from: "onboarding@resend.dev",
 			to: email,
 			subject: "2FA Verification",
@@ -22,30 +22,30 @@ export const sendTwoFactorEmail = (email: string, code: string) => {
 
 
 
-export const sendPasswordResetEmail = (email: string, token: string) => {
+export const sendPasswordResetEmail = async (email: string, token: string) => {
 	try {
-		const resetEmail = `http://localhost:3000/auth/newPassword?token=${token}`;
+		const resetEmail = `${url}/auth/newPassword?token=${token}`;
 
-		resend.emails.send({
+		await resend.emails.send({
 			to: email,
 			from: "onboarding@resend.dev",
 			subject: "Password Verification email",
-			html: `Click <a href=${resetEmail}>Here</a> to verify `
+			html: `Click <a href="${resetEmail}">Here</a> to verify `
 		})
 	} catch (error) {
 		console.log("Error in sendPasswordResetEmail :", error)
 	}
 }
 
-export const sendVerificationEmail = (email: string, token: string) => {
+export const sendVerificationEmail = async (email: string, token: string) => {
 	try {
-		const verificationEmail = `http://localhost:3000/auth/newVerification?token=${token}`;
+		const verificationEmail = `${url}/auth/newVerification?token=${token}`;
 
-		resend.emails.send({
+		await resend.emails.send({
 			to: email,
 			from: "onboarding@resend.dev",
 			subject: "Verify Your Email",
-			html: `<p>Click <a href=${verificationEmail}>Here</a> to verify email</p>`
+			html: `<p>Click <a href="${verificationEmail}">Here</a> to verify email</p>`
 		})
 	} catch (error) {
 		console.log("Error in sendVerificationEmail : ", error)
