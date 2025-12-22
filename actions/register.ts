@@ -22,13 +22,15 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
 	const hashedPassword = await bcrypt.hash(password, 10);
 
-	await prisma?.user.create({
+	await prisma.user.create({
 		data: {
 			email,
 			password: hashedPassword,
 			name
 		}
 	})
+	console.log("ok...")
+
 	const verificationToken = await generateVerificationTokenByEmail(email);
 	sendVerificationEmail(email, verificationToken?.token as string)
 	return { success: "verification Email Sent!" }

@@ -3,7 +3,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_SECRET_KEY)
 
-const url = "https://nextauth-v5-advanced-toolkit.vercel.app"
+const domain = process.env.NEXT_PUBLIC_APP_URL
 
 export const sendTwoFactorEmail = async (email: string, code: string) => {
 	try {
@@ -24,7 +24,7 @@ export const sendTwoFactorEmail = async (email: string, code: string) => {
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
 	try {
-		const resetEmail = `${url}/auth/newPassword?token=${token}`;
+		const resetEmail = `${domain}/auth/newPassword?token=${token}`;
 
 		await resend.emails.send({
 			to: email,
@@ -39,7 +39,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
 
 export const sendVerificationEmail = async (email: string, token: string) => {
 	try {
-		const verificationEmail = `${url}/auth/newVerification?token=${token}`;
+		const verificationEmail = `${domain}/auth/newVerification?token=${token}`;
 
 		await resend.emails.send({
 			to: email,

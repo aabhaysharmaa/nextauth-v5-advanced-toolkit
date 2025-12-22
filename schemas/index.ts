@@ -1,4 +1,4 @@
-import { UserRole } from "@/lib/generated/prisma/enums";
+// import { UserRole } from "@/lib/generated/prisma/enums";
 import * as z from "zod";
 export const LoginSchema = z.object({
 	email: z.string().min(5, "email should not be empty"),
@@ -15,7 +15,7 @@ export const RegisterSchema = z.object({
 export const settingsSchema = z.object({
   name: z.string().min(4, "Field can't be empty").optional(),
   isTwoFactorEnabled: z.boolean().optional(),
-  role: z.enum([UserRole.ADMIN, UserRole.USER]),
+  role: z.enum(["ADMIN","USER"]),
   email: z.string().optional(),
   password: z.string().optional(),
   newPassword: z.string().optional(),
